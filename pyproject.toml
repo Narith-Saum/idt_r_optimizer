@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "idt-r-optimizer"
-version = "0.1.2"
+version = "0.1.4"
 description = "Advanced hyperparameter optimization using Iterative Decision Tree - Random (IDT-R) algorithm"
 readme = "README.md"
 requires-python = ">=3.9"

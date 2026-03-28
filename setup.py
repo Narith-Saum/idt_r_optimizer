@@ -9,7 +9,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="idt-r-optimizer",
-    version="0.1.2",
+    version="0.1.4",
     author="IDT-R Development Team",
     description="Advanced hyperparameter optimization using Iterative Decision Tree - Random (IDT-R) algorithm",
     long_description=long_description,

@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2026-03-28
+
+### Fixed
+- **Documentation Clarity**: Updated README.md installation instructions
+  - Changed PyPI installation description from "coming soon" to "Recommended"
+  - Ensures users have clear, correct installation guidance
+  
+### Verified
+- ✅ All 19 unit and integration tests passing
+- ✅ Examples running successfully on all platforms
+- ✅ Clean sync between GitHub and PyPI
+
+## [0.1.3] - 2026-03-28
+
+### Fixed
+- **PyPI Project Metadata**: Updated all project links to correct GitHub repository
+  - Homepage, Repository, Bug Tracker, and Documentation links now point to correct GitHub URLs
+  - Ensures users can access GitHub, documentation, and issue tracker from PyPI page
+  
+### Verified
+- ✅ GitHub Repository: https://github.com/Narith-Saum/idt_r_optimizer (Public)
+- ✅ PyPI Package: https://pypi.org/project/idt-r-optimizer/
+- ✅ All documentation links functional
+- ✅ Release tags synced between platforms
+
 ## [0.1.2] - 2026-03-28
 
 ### Fixed
@@ -34,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **ARCHITECTURE.md**: Improved References section with proper academic citations and links
 - **Documentation**: Better guidance on citing the package in academic work
 
-## [0.1.0] - 2024-01-01
+## [0.1.0] - 2026-03-28
 
 ### Added
 - **Core IDT-R Algorithm**: Complete implementation of Iterative Decision Tree - Random optimization
