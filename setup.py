@@ -9,13 +9,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="idt-r-optimizer",
-    version="0.1.4",
+    version="0.1.5",
     author="IDT-R Development Team",
     description="Advanced hyperparameter optimization using Iterative Decision Tree - Random (IDT-R) algorithm",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Narith-Saum/idt_r_optimizer",
     packages=find_packages(),
+    py_modules=["idt_r_optimizer"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.9",

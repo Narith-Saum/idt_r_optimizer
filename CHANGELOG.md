@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2026-03-31
+
+### Fixed
+- **Import Path Issue**: Fixed `idt_r_optimizer` module not found error
+  - Added `idt_r_optimizer.py` to package distribution via `py_modules` in setup.py and pyproject.toml
+  - Now `from idt_r_optimizer import IDTROptimizer` works correctly after PyPI installation
+  - Ensures seamless import experience for PyPI users
+  
+### Verified
+- ✅ Import works: `from idt_r_optimizer import IDTROptimizer`
+- ✅ Alternative import works: `from idt_r import IDTROptimizer`
+- ✅ All 19 tests passing
+
 ## [0.1.4] - 2026-03-28
 
 ### Fixed
