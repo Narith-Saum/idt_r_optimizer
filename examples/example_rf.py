@@ -20,9 +20,9 @@ import time
 
 
 def main():
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("IDT-R Optimizer - Example 2: Random Forest Hyperparameter Tuning")
-    print("="*70)
+    print("=" * 70)
 
     # Load dataset
     print("\n[DATA] Loading Digits dataset...")
@@ -32,12 +32,12 @@ def main():
 
     # Define search space
     search_space = {
-        "n_estimators": (10, 200),           # Number of trees
-        "max_depth": (3, 30),                # Maximum tree depth
-        "min_samples_split": (2, 15),        # Minimum samples to split
-        "min_samples_leaf": (1, 8),          # Minimum samples in leaf
-        "max_features": ["sqrt", "log2"],    # Features to consider per split
-        "criterion": ["gini", "entropy"],    # Split criterion
+        "n_estimators": (10, 200),  # Number of trees
+        "max_depth": (3, 30),  # Maximum tree depth
+        "min_samples_split": (2, 15),  # Minimum samples to split
+        "min_samples_leaf": (1, 8),  # Minimum samples in leaf
+        "max_features": ["sqrt", "log2"],  # Features to consider per split
+        "criterion": ["gini", "entropy"],  # Split criterion
     }
 
     print("\n[SEARCH] Search Space:")
@@ -53,15 +53,9 @@ def main():
         Objective: Maximize cross-validation accuracy.
         """
         try:
-            model = RandomForestClassifier(
-                n_jobs=-1,
-                random_state=42,
-                **params
-            )
+            model = RandomForestClassifier(n_jobs=1, random_state=42, **params)
 
-            cv_scores = cross_val_score(
-                model, X, y, cv=3, scoring="accuracy", n_jobs=-1
-            )
+            cv_scores = cross_val_score(model, X, y, cv=3, scoring="accuracy", n_jobs=1)
             score = cv_scores.mean()
 
             return score
@@ -83,17 +77,19 @@ def main():
         verbose=True,
         maximize=True,
         seed=42,
+        n_jobs=2,
+        parallel_backend="threading",
     )
 
     best_params, best_score = optimizer.optimize(objective)
     idt_r_time = time.time() - start_time
 
     # Display results
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("IDT-R OPTIMIZATION RESULTS")
-    print("="*70)
+    print("=" * 70)
     print(f"[OK] Best Score: {best_score:.6f}")
-    print(f"[OK] Best Parameters:")
+    print("[OK] Best Parameters:")
     for param, value in sorted(best_params.items()):
         if isinstance(value, float):
             print(f"   {param}: {value:.6f}")
@@ -104,14 +100,14 @@ def main():
     history = optimizer.get_history()
     summary = history.get_summary()
 
-    print(f"\n[SUMMARY] IDT-R Summary:")
+    print("\n[SUMMARY] IDT-R Summary:")
     print(f"   Total Evaluations: {summary['n_evaluations']}")
     print(f"   Best Score: {summary['best_score']:.6f}")
     print(f"   Mean Score: {summary['mean_score']:.6f}")
     print(f"   Std Dev: {summary['std_score']:.6f}")
     print(f"   Time Elapsed: {idt_r_time:.2f}s")
 
-    print("\n" + "="*70 + "\n")
+    print("\n" + "=" * 70 + "\n")
 
 
 if __name__ == "__main__":

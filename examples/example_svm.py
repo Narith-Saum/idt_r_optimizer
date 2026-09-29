@@ -19,9 +19,9 @@ import numpy as np
 
 
 def main():
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("IDT-R Optimizer - Example 1: SVM Hyperparameter Tuning")
-    print("="*70)
+    print("=" * 70)
 
     # Load dataset
     print("\n[DATA] Loading Digits dataset...")
@@ -31,10 +31,10 @@ def main():
 
     # Define search space
     search_space = {
-        "C": (0.1, 100.0),                    # Regularization parameter
+        "C": (0.1, 100.0),  # Regularization parameter
         "kernel": ["linear", "poly", "rbf"],  # Kernel type
-        "gamma": (0.0001, 1.0),               # Kernel coefficient
-        "degree": (2, 5),                     # Polynomial degree
+        "gamma": (0.0001, 1.0),  # Kernel coefficient
+        "degree": (2, 5),  # Polynomial degree
     }
 
     print("\n[SEARCH] Search Space:")
@@ -44,7 +44,7 @@ def main():
     # Define objective function
     def objective(params):
         """
-        Objective: Maximize cross-validation accuracy on Iris dataset.
+        Objective: Maximize cross-validation accuracy on the Digits dataset.
         """
         try:
             # Create SVM model
@@ -71,6 +71,8 @@ def main():
         verbose=True,
         maximize=True,
         seed=42,
+        n_jobs=2,
+        parallel_backend="threading",
     )
 
     # Run optimization
@@ -78,11 +80,11 @@ def main():
     best_params, best_score = optimizer.optimize(objective)
 
     # Display results
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("OPTIMIZATION RESULTS")
-    print("="*70)
+    print("=" * 70)
     print(f"[OK] Best Score: {best_score:.6f}")
-    print(f"[OK] Best Parameters:")
+    print("[OK] Best Parameters:")
     for param, value in sorted(best_params.items()):
         if isinstance(value, float):
             print(f"   {param}: {value:.6f}")
@@ -93,13 +95,13 @@ def main():
     history = optimizer.get_history()
     summary = history.get_summary()
 
-    print(f"\n[SUMMARY] Optimization Summary:")
+    print("\n[SUMMARY] Optimization Summary:")
     print(f"   Total Evaluations: {summary['n_evaluations']}")
     print(f"   Best Score: {summary['best_score']:.6f}")
     print(f"   Mean Score: {summary['mean_score']:.6f}")
     print(f"   Std Dev: {summary['std_score']:.6f}")
 
-    print("\n" + "="*70 + "\n")
+    print("\n" + "=" * 70 + "\n")
 
 
 if __name__ == "__main__":

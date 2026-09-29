@@ -22,7 +22,7 @@ class LeafSampler:
     ) -> List[Dict[str, Any]]:
         """
         Generate random samples from within a leaf's hyperparameter bounds.
-        
+
         Parameters:
         -----------
         search_space : SearchSpace
@@ -31,7 +31,7 @@ class LeafSampler:
             Normalized bounds [0, 1] for each parameter in this leaf
         n_samples : int
             Number of samples to generate
-            
+
         Returns:
         --------
         List[Dict[str, Any]]
@@ -66,7 +66,7 @@ class LeafSampler:
     ) -> List[Dict[str, Any]]:
         """
         Sample from multiple leaf regions.
-        
+
         Parameters:
         -----------
         search_space : SearchSpace
@@ -75,7 +75,7 @@ class LeafSampler:
             List of leaf bounds
         n_samples_per_leaf : int
             Number of samples per leaf
-            
+
         Returns:
         --------
         List[Dict[str, Any]]
@@ -98,14 +98,14 @@ class LeafSampler:
     ) -> List[Dict[str, Any]]:
         """
         Generate random samples from entire search space (baseline comparison).
-        
+
         Parameters:
         -----------
         search_space : SearchSpace
             Search space definition
         n_samples : int
             Number of samples to generate
-            
+
         Returns:
         --------
         List[Dict[str, Any]]

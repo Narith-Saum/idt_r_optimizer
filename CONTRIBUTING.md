@@ -22,7 +22,7 @@ Thank you for your interest in contributing to the IDT-R Optimizer project!
 
 1. **Fork the repository**
    ```bash
-   git clone https://github.com/yourname/idt_r_optimizer.git
+   git clone https://github.com/Narith-Saum/idt_r_optimizer.git
    cd idt_r_optimizer
    ```
 
@@ -43,13 +43,13 @@ Thank you for your interest in contributing to the IDT-R Optimizer project!
 
 5. **Add tests**
    ```bash
-   pytest tests/
+   python -m pytest tests/ -v
    ```
 
 6. **Format code**
    ```bash
-   black idt_r/
-   flake8 idt_r/
+   python -m black --check idt_r/ tests/
+   python -m flake8 idt_r/ tests/
    ```
 
 7. **Push and submit PR**
@@ -68,7 +68,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 
 # Run tests
-pytest tests/ -v
+python -m pytest tests/ -v
 
 # Generate coverage report
 pytest tests/ --cov=idt_r --cov-report=html
@@ -100,6 +100,7 @@ pytest tests/ --cov=idt_r --cov-report=html
 - Write unit tests for new features
 - Test edge cases
 - Include integration tests where applicable
+- Test serial behavior and both supported backends when changing candidate evaluation
 
 ## Areas for Contribution
 

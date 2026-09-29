@@ -26,6 +26,7 @@ examples/
   example_rf.py
 tests/
   test_basic.py
+    test_parallel.py
 ```
 
 ### 2. Verify Imports Work
@@ -55,12 +56,11 @@ print("✓ IDTROptimizer instantiated successfully")
 
 ```bash
 pip install pytest
-pytest tests/test_basic.py -v
+python -m pytest tests/ -v
 ```
 
 Expected output:
 - All tests pass (green checkmarks)
-- Coverage > 85%
 - No warnings or errors
 
 ### 2. Run Example Scripts
@@ -71,7 +71,7 @@ python examples/example_svm.py
 ```
 
 Expected output:
-- Loads Iris dataset
+- Loads the Digits dataset
 - Runs IDT-R optimization
 - Shows best parameters and score
 - Summary statistics
@@ -83,11 +83,9 @@ python examples/example_rf.py
 ```
 
 Expected output:
-- Generates synthetic dataset
+- Loads the Digits dataset
 - Runs IDT-R optimization
-- Runs Random Search baseline
-- Comparison showing IDT-R advantage
-- **IDT-R should show improvement over baseline**
+- Shows best parameters and summary statistics
 
 ### 3. Manual Functionality Test
 
@@ -139,7 +137,7 @@ Check: `pip show idt-r-optimizer`
 Expected output:
 ```
 Name: idt-r-optimizer
-Version: 0.1.0
+Version: 0.2.0
 Summary: Advanced hyperparameter optimization using Iterative Decision Tree - Random (IDT-R) algorithm
 Location: /path/to/idt_r_optimizer
 ```
@@ -148,12 +146,14 @@ Location: /path/to/idt_r_optimizer
 
 ```python
 import numpy
+import joblib
 import sklearn
 print(f"NumPy version: {numpy.__version__}")
+print(f"joblib version: {joblib.__version__}")
 print(f"Scikit-learn version: {sklearn.__version__}")
 ```
 
-Both should be recent versions (numpy >= 1.20.0, sklearn >= 1.0.0)
+All should be recent versions (joblib >= 1.2.0, numpy >= 1.20.0, sklearn >= 1.0.0)
 
 ## API Verification
 

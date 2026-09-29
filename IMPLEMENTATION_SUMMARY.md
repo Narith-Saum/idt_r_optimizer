@@ -6,6 +6,12 @@ A professional, production-ready Python package implementing the **IDT-R (Iterat
 
 This package has been fully implemented with all core features, comprehensive documentation, examples, and tests.
 
+## Current Release: v0.2.0
+
+Version 0.2.0 adds ordered parallel candidate evaluation through `n_jobs` and
+`parallel_backend`. Serial execution remains the default, and parallel workers
+never mutate optimization history directly.
+
 ## Package Structure
 
 ```
@@ -27,6 +33,7 @@ idt_r_optimizer/
 ├── tests/                          # Test suite
 │   ├── __init__.py
 │   └── test_basic.py               # Comprehensive unit & integration tests
+│   └── test_parallel.py            # Parallel evaluation regression tests
 │
 ├── docs/ (Future)                  # Generated documentation
 │
@@ -52,6 +59,7 @@ class IDTROptimizer:
     - _extract_leaves()
     - _select_top_leaves()
     - _sample_from_leaves()
+   - _evaluate_candidates() supports serial and ordered parallel batches
     - get_best(), get_history(), get_summary()
 ```
 
@@ -131,6 +139,7 @@ class IDTROptimizer:
 - Iterative refinement
 - Duplicate prevention
 - Maximize or minimize support
+- Parallel candidate evaluation with threading or process backends
 
 ✅ **Type Support**
 - Continuous (float) parameters
@@ -231,8 +240,7 @@ best_params, best_score = optimizer.optimize(objective)
 **Demonstrates**:
 - Random Forest tuning
 - Larger parameter space
-- Comparison with random search baseline
-- Performance improvement metrics
+- Parallel candidate evaluation without nested model workers
 
 ## Test Suite
 
@@ -266,8 +274,8 @@ best_params, best_score = optimizer.optimize(objective)
 ### setup.py
 ```python
 - Package name: idt-r-optimizer
-- Version: 0.1.0
-- Dependencies: numpy, scikit-learn
+- Version: 0.2.0
+- Dependencies: joblib, numpy, scikit-learn
 - Python: 3.9+
 - Supported platforms: All
 ```
@@ -282,6 +290,7 @@ best_params, best_score = optimizer.optimize(objective)
 
 ### requirements.txt
 ```
+joblib>=1.2.0
 numpy>=1.20.0
 scikit-learn>=1.0.0
 ```
@@ -303,7 +312,7 @@ scikit-learn>=1.0.0
 ### From Source
 ```bash
 # Clone
-git clone https://github.com/yourname/idt_r_optimizer.git
+git clone https://github.com/Narith-Saum/idt_r_optimizer.git
 cd idt_r_optimizer
 
 # Install editable
@@ -317,7 +326,7 @@ python examples/example_svm.py
 python examples/example_rf.py
 ```
 
-### As Package (future)
+### As Package
 ```bash
 pip install idt-r-optimizer
 ```
@@ -393,8 +402,7 @@ pip install idt-r-optimizer
 - Examples and tests
 - Complete documentation
 
-🔜 **Planned (v0.2.0)**:
-- Parallel evaluation
+🔜 **Planned (v0.3.0)**:
 - Warm start
 - Custom surrogates
 - Constraints
@@ -494,7 +502,7 @@ pip install idt-r-optimizer
 
 **Package Status**: ✅ Complete and Production-Ready
 
-**Version**: 0.1.0
+**Version**: 0.2.0
 
 **License**: MIT
 

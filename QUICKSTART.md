@@ -5,11 +5,11 @@ Get up and running with IDT-R in 5 minutes!
 ## 1. Installation
 
 ```bash
-# Option A: From PyPI (when released)
+# Option A: From PyPI
 pip install idt-r-optimizer
 
 # Option B: From source
-git clone https://github.com/yourname/idt_r_optimizer.git
+git clone https://github.com/Narith-Saum/idt_r_optimizer.git
 cd idt_r_optimizer
 pip install -e .
 ```
@@ -142,6 +142,22 @@ optimizer = IDTROptimizer(
 )
 ```
 
+### Parallel Candidate Evaluation
+
+```python
+optimizer = IDTROptimizer(
+    search_space,
+    max_iterations=20,
+    n_jobs=4,
+    parallel_backend="threading",
+)
+```
+
+`n_jobs=1` is the default serial behavior. Use `n_jobs=-1` to use all available
+workers. Choose `"loky"` for serializable CPU-bound Python objectives. Keep
+inner model and cross-validation `n_jobs=1` when the optimizer evaluates
+candidates in parallel.
+
 ## 6. Advanced Usage
 
 ### Access Optimization History
@@ -211,6 +227,11 @@ If your objective is very fast:
 - You can safely use more iterations
 - But the overhead isn't significant since evaluation dominates
 
+If evaluations are independent and expensive:
+- Set `n_jobs` to the number of workers you want to use
+- Use `parallel_backend="threading"` for shared in-memory data
+- Use `parallel_backend="loky"` only when the objective and its state can be serialized
+
 ## 8. Next Steps
 
 - Read the [README](README.md) for detailed documentation
@@ -236,8 +257,8 @@ A: Start with defaults and adjust based on problem:
 - Increase samples per leaf for better exploration
 
 **Q: Can I run IDT-R in parallel?**
-A: Not yet, but it's planned for v0.2.0.
+A: Yes. Set `n_jobs` to a worker count and choose `"threading"` or `"loky"`.
 
 ---
 
-**Need more help?** Check the [examples](examples/) or [open an issue](https://github.com/yourname/idt_r_optimizer/issues)!
+**Need more help?** Check the [examples](examples/) or [open an issue](https://github.com/Narith-Saum/idt_r_optimizer/issues)!

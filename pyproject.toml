@@ -1,14 +1,15 @@
 [build-system]
-requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "idt-r-optimizer"
-version = "0.1.5"
+version = "0.2.0"
 description = "Advanced hyperparameter optimization using Iterative Decision Tree - Random (IDT-R) algorithm"
 readme = "README.md"
 requires-python = ">=3.9"
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
     {name = "IDT-R Development Team", email = "support@idt-r.dev"}
 ]
@@ -16,7 +17,6 @@ keywords = ["hyperparameter-optimization", "machine-learning", "bayesian-optimiz
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
@@ -28,6 +28,7 @@ classifiers = [
 ]
 
 dependencies = [
+    "joblib>=1.2.0",
     "numpy>=1.20.0",
     "scikit-learn>=1.0.0",
 ]
@@ -39,6 +40,8 @@ dev = [
     "black>=21.0",
     "flake8>=3.9",
     "mypy>=0.900",
+    "build>=1.0",
+    "twine>=4.0",
 ]
 
 [project.urls]

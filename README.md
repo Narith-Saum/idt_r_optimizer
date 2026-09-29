@@ -19,7 +19,7 @@ This approach bridges the gap between simple random/grid search and expensive Ba
 
 ## Installation
 
-### From PyPI (coming soon)
+### From PyPI (Recommended)
 ```bash
 pip install idt-r-optimizer
 ```
@@ -33,6 +33,7 @@ pip install -e .
 
 ### Requirements
 - Python 3.9+
+- joblib >= 1.2.0
 - NumPy >= 1.20.0
 - scikit-learn >= 1.0.0
 
@@ -75,6 +76,31 @@ best_params, best_score = optimizer.optimize(objective)
 print(f"\n✅ Best Score: {best_score:.4f}")
 print(f"✅ Best Params: {best_params}")
 ```
+
+## Parallel Evaluation
+
+Candidate evaluations are serial by default. Set `n_jobs` to a positive worker
+count, or `-1` to use all available workers, when your objective can safely
+run concurrently.
+
+```python
+optimizer = IDTROptimizer(
+    search_space,
+    max_iterations=20,
+    n_jobs=4,
+    parallel_backend="threading",
+)
+```
+
+Use `parallel_backend="threading"` for objectives that rely on shared in-memory
+data or native libraries that release the GIL. Use `parallel_backend="loky"`
+for CPU-bound Python objectives whose callable and captured state can be
+serialized. Candidate results are recorded in proposal order after each batch.
+
+Avoid nested parallelism: when the optimizer uses multiple workers, configure
+parallel model training or cross-validation inside the objective with
+`n_jobs=1`. The optimizer seed controls candidate sampling; objectives with
+their own randomness should manage their own random state.
 
 ## Algorithm Details
 
@@ -146,6 +172,8 @@ optimizer = IDTROptimizer(
     verbose=True,              # Print progress
     maximize=True,             # Maximize or minimize
     seed=None,                 # Random seed
+    n_jobs=1,                  # Serial by default; -1 uses all workers
+    parallel_backend="threading",  # "threading" or "loky"
 )
 ```
 
@@ -293,6 +321,15 @@ best_params, best_score = optimizer.optimize(objective)
 - **Shallow (2-3)**: Rough surrogate, general patterns
 - **Deep (6-10)**: Complex surrogate, overfitting risk
 
+**`n_jobs`**: Concurrent candidate evaluations
+- **1**: Serial execution, the default
+- **2 or more**: Evaluate each candidate batch concurrently
+- **-1**: Use all available workers
+
+**`parallel_backend`**: Worker execution model
+- **`"threading"`**: Best for shared memory, I/O, and many NumPy/scikit-learn objectives
+- **`"loky"`**: Process-based execution for serializable CPU-bound Python objectives
+
 ### For Different Problem Types
 
 **Fast/Cheap Objective (~seconds)**
@@ -390,12 +427,12 @@ If you use IDT-R in your research, please cite the software and the related rese
 ### Software Citation
 
 ```bibtex
-@software{idt_r_2024,
+@software{idt_r_2026,
   title={IDT-R Optimizer: Iterative Decision Tree - Random Hyperparameter Optimization},
   author={{IDT-R Development Team}},
-  year={2024},
+    year={2026},
   url={https://github.com/Narith-Saum/idt_r_optimizer},
-  version={0.1.2},
+    version={0.2.0},
   howpublished={Python Package Index (PyPI)}
 }
 ```
@@ -431,12 +468,10 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Changelog
 
-### v0.1.0 (2024)
-- Initial release
-- Core IDT-R algorithm implementation
-- Support for continuous, discrete, categorical parameters
-- Full history tracking
-- Comprehensive examples
+### v0.2.0 (2026)
+- Parallel candidate evaluation with configurable thread and process backends
+- Ordered history updates and per-candidate error isolation
+- Parallel execution tests and release automation
 
 ---
 

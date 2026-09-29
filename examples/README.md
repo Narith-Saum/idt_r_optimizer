@@ -29,10 +29,10 @@ Optimizes Random Forest classifier hyperparameters on the scikit-learn digits da
 
 - **Dataset**: Digits (1,797 samples, 64 features, 10 classes)
 - **Hyperparameters**:
-  - `n_estimators`: Number of trees (continuous: 10-200)
-  - `max_depth`: Maximum tree depth (continuous: 3-30)
-  - `min_samples_split`: Minimum samples to split (continuous: 2-15)
-  - `min_samples_leaf`: Minimum samples in leaf (continuous: 1-8)
+  - `n_estimators`: Number of trees (discrete: 10-200)
+  - `max_depth`: Maximum tree depth (discrete: 3-30)
+  - `min_samples_split`: Minimum samples to split (discrete: 2-15)
+  - `min_samples_leaf`: Minimum samples in leaf (discrete: 1-8)
   - `max_features`: Features per split (categorical: sqrt, log2)
   - `criterion`: Split criterion (categorical: gini, entropy)
 - **Metric**: Cross-validation accuracy (3-fold CV)
@@ -69,6 +69,11 @@ python examples/example_neural_network.py
 ```
 
 ## Key Features Demonstrated
+
+### Parallel Evaluation
+- The SVM and Random Forest examples use optimizer-level threaded evaluation
+- Their inner model and cross-validation workers are set to one to avoid nested parallelism
+- The neural-network example remains serial because training resources are often shared
 
 ### 1. Multiple Data Types
 - **Continuous**: C, gamma, learning_rate, dropout_rate, etc.

@@ -2,7 +2,7 @@
 Utility functions for IDT-R optimizer.
 """
 
-from typing import List, Dict, Any, Callable
+from typing import List, Dict, Any
 import numpy as np
 
 
@@ -12,14 +12,14 @@ def remove_duplicate_params(
 ) -> List[Dict[str, Any]]:
     """
     Remove duplicate parameter sets from a list.
-    
+
     Parameters:
     -----------
     params_list : List[Dict[str, Any]]
         List of parameter dictionaries
     tolerance : float
         Tolerance for comparing float values
-        
+
     Returns:
     --------
     List[Dict[str, Any]]
@@ -55,23 +55,21 @@ def filter_new_params(
 ) -> List[Dict[str, Any]]:
     """
     Filter out candidates that have already been evaluated.
-    
+
     Parameters:
     -----------
     candidates : List[Dict[str, Any]]
         Newly proposed candidates
     evaluated_params : List[Dict[str, Any]]
         Previously evaluated parameters
-        
+
     Returns:
     --------
     List[Dict[str, Any]]
         List of candidates not yet evaluated
     """
     evaluated_keys = set(_params_to_key(p) for p in evaluated_params)
-    new_candidates = [
-        c for c in candidates if _params_to_key(c) not in evaluated_keys
-    ]
+    new_candidates = [c for c in candidates if _params_to_key(c) not in evaluated_keys]
     return new_candidates
 
 
@@ -81,14 +79,14 @@ def compute_feature_importance(
 ) -> Dict[str, float]:
     """
     Compute simple feature importance based on prediction error correlation.
-    
+
     Parameters:
     -----------
     tree_predictions : np.ndarray
         Predictions from tree on training data
     y_actual : np.ndarray
         Actual objective values
-        
+
     Returns:
     --------
     Dict[str, float]
@@ -96,7 +94,7 @@ def compute_feature_importance(
     """
     # This is a placeholder - real implementation would extract from sklearn tree
     residuals = np.abs(y_actual - tree_predictions)
-    mse = np.mean(residuals ** 2)
+    mse = np.mean(residuals**2)
     return {"mse_train": float(mse)}
 
 
@@ -106,14 +104,14 @@ def normalize_scores(
 ) -> np.ndarray:
     """
     Normalize a list of scores to [0, 1] range.
-    
+
     Parameters:
     -----------
     scores : List[float]
         Raw scores
     method : str
         Normalization method: 'minmax' or 'zscore'
-        
+
     Returns:
     --------
     np.ndarray
@@ -126,7 +124,7 @@ def normalize_scores(
         max_val = np.max(scores_arr)
         if max_val == min_val:
             return np.ones_like(scores_arr) * 0.5
-        return (scores_arr - min_val) / (max_val - min_val)
+        return np.asarray((scores_arr - min_val) / (max_val - min_val), dtype=float)
 
     elif method == "zscore":
         mean_val = np.mean(scores_arr)
@@ -135,7 +133,7 @@ def normalize_scores(
             return np.zeros_like(scores_arr)
         normalized = (scores_arr - mean_val) / std_val
         # Clip to reasonable range
-        return np.clip(normalized, -3, 3) / 3 + 0.5
+        return np.asarray(np.clip(normalized, -3, 3) / 3 + 0.5, dtype=float)
 
     else:
         raise ValueError(f"Unknown normalization method: {method}")
@@ -156,7 +154,7 @@ def format_params_for_display(params: Dict[str, Any]) -> str:
 def estimate_search_space_size(search_space_dict: Dict[str, Any]) -> float:
     """
     Estimate the size of the search space.
-    
+
     For continuous: infinity
     For discrete: product of ranges
     For categorical: product of option counts
@@ -168,7 +166,7 @@ def estimate_search_space_size(search_space_dict: Dict[str, Any]) -> float:
             min_val, max_val = spec
             if isinstance(min_val, int) and isinstance(max_val, int):
                 # Discrete
-                size *= (max_val - min_val + 1)
+                size *= max_val - min_val + 1
             else:
                 # Continuous
                 return float("inf")

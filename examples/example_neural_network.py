@@ -14,12 +14,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from idt_r_optimizer import IDTROptimizer
-import numpy as np
 
 
 def main():
     try:
-        import tensorflow as tf
         from tensorflow import keras
         from tensorflow.keras import layers
     except ImportError:
@@ -27,9 +25,9 @@ def main():
         print("Install it with: pip install tensorflow")
         return
 
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("IDT-R Optimizer - Example 3: Neural Network Hyperparameter Tuning")
-    print("="*70)
+    print("=" * 70)
 
     # Load and preprocess MNIST dataset
     print("\n[DATA] Loading and preprocessing MNIST dataset...")
@@ -49,14 +47,14 @@ def main():
 
     print(f"   Training Shape: {X_train.shape}")
     print(f"   Test Shape: {X_test.shape}")
-    print(f"   Classes: 10 (digits 0-9)")
+    print("   Classes: 10 (digits 0-9)")
 
     # Define search space for hyperparameters
     search_space = {
-        "learning_rate": (0.0001, 0.01),       # Learning rate
-        "batch_size": (16, 128),               # Batch size (discrete)
-        "hidden_units": (64, 512),             # Hidden layer size
-        "dropout_rate": (0.1, 0.5),            # Dropout rate
+        "learning_rate": (0.0001, 0.01),  # Learning rate
+        "batch_size": (16, 128),  # Batch size (discrete)
+        "hidden_units": (64, 512),  # Hidden layer size
+        "dropout_rate": (0.1, 0.5),  # Dropout rate
         "optimizer": ["adam", "sgd", "rmsprop"],  # Optimizer type
     }
 
@@ -89,13 +87,15 @@ def main():
                 optimizer = keras.optimizers.RMSprop(learning_rate=learning_rate)
 
             # Build model
-            model = keras.Sequential([
-                layers.Dense(hidden_units, activation="relu", input_shape=(784,)),
-                layers.Dropout(dropout_rate),
-                layers.Dense(64, activation="relu"),
-                layers.Dropout(dropout_rate),
-                layers.Dense(10, activation="softmax"),
-            ])
+            model = keras.Sequential(
+                [
+                    layers.Dense(hidden_units, activation="relu", input_shape=(784,)),
+                    layers.Dropout(dropout_rate),
+                    layers.Dense(64, activation="relu"),
+                    layers.Dropout(dropout_rate),
+                    layers.Dense(10, activation="softmax"),
+                ]
+            )
 
             # Compile model
             model.compile(
@@ -105,8 +105,9 @@ def main():
             )
 
             # Train model (fewer epochs for faster optimization)
-            history = model.fit(
-                X_train, y_train,
+            model.fit(
+                X_train,
+                y_train,
                 batch_size=batch_size,
                 epochs=5,
                 validation_split=0.2,
@@ -140,11 +141,11 @@ def main():
     best_params, best_score = optimizer.optimize(objective)
 
     # Display results
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("OPTIMIZATION RESULTS")
-    print("="*70)
+    print("=" * 70)
     print(f"[OK] Best Validation Accuracy: {best_score:.6f}")
-    print(f"[OK] Best Parameters:")
+    print("[OK] Best Parameters:")
     for param, value in sorted(best_params.items()):
         if isinstance(value, float):
             print(f"   {param}: {value:.6f}")
@@ -155,13 +156,13 @@ def main():
     history = optimizer.get_history()
     summary = history.get_summary()
 
-    print(f"\n[SUMMARY] Optimization Summary:")
+    print("\n[SUMMARY] Optimization Summary:")
     print(f"   Total Evaluations: {summary['n_evaluations']}")
     print(f"   Best Score: {summary['best_score']:.6f}")
     print(f"   Mean Score: {summary['mean_score']:.6f}")
     print(f"   Std Dev: {summary['std_score']:.6f}")
 
-    print("\n" + "="*70 + "\n")
+    print("\n" + "=" * 70 + "\n")
 
 
 if __name__ == "__main__":

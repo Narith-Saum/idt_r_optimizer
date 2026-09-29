@@ -68,10 +68,12 @@ class TestSearchSpace:
         assert space.get_bounds() == [(0.0, 1.0), (0.0, 1.0), (0.0, 1.0)]
 
     def test_search_space_sampling(self):
-        space = SearchSpace({
-            "x": (0.0, 1.0),
-            "y": (0.0, 10.0),
-        })
+        space = SearchSpace(
+            {
+                "x": (0.0, 1.0),
+                "y": (0.0, 10.0),
+            }
+        )
 
         samples = space.sample_uniform(10)
         assert len(samples) == 10
@@ -79,11 +81,13 @@ class TestSearchSpace:
         assert all("x" in s and "y" in s for s in samples)
 
     def test_search_space_normalize_denormalize(self):
-        space = SearchSpace({
-            "a": (1.0, 5.0),
-            "b": (10, 20),
-            "c": ["A", "B", "C"],
-        })
+        space = SearchSpace(
+            {
+                "a": (1.0, 5.0),
+                "b": (10, 20),
+                "c": ["A", "B", "C"],
+            }
+        )
 
         params = {"a": 3.0, "b": 15, "c": "B"}
         normalized = space.normalize(params)
@@ -155,7 +159,7 @@ class TestIDTROptimizer:
 
         assert optimizer.max_iterations == 5
         assert optimizer.n_random_init == 5
-        assert not optimizer.maximize is False
+        assert optimizer.maximize
 
     def test_optimizer_simple_optimization(self):
         """Simple optimization: maximize -(x-0.7)^2 - (y-0.3)^2."""
@@ -237,8 +241,8 @@ class TestIDTROptimizer:
     def test_optimizer_with_mixed_types(self):
         space = {
             "learning_rate": (0.001, 0.1),  # Continuous
-            "batch_size": (8, 256),          # Discrete
-            "optimizer": ["adam", "sgd"],    # Categorical
+            "batch_size": (8, 256),  # Discrete
+            "optimizer": ["adam", "sgd"],  # Categorical
         }
 
         call_count = 0
@@ -318,10 +322,7 @@ class TestIntegration:
         def objective(params):
             x = params["x"]
             y = params["y"]
-            return -(
-                20 + x**2 - 10 * np.cos(2 * np.pi * x) +
-                y**2 - 10 * np.cos(2 * np.pi * y)
-            )
+            return -(20 + x**2 - 10 * np.cos(2 * np.pi * x) + y**2 - 10 * np.cos(2 * np.pi * y))
 
         optimizer = IDTROptimizer(
             space,
@@ -352,14 +353,10 @@ class TestIntegration:
         def objective(params):
             return params["x"] + params["y"]
 
-        optimizer1 = IDTROptimizer(
-            space, max_iterations=3, n_random_init=2, verbose=False, seed=42
-        )
+        optimizer1 = IDTROptimizer(space, max_iterations=3, n_random_init=2, verbose=False, seed=42)
         best1, score1 = optimizer1.optimize(objective)
 
-        optimizer2 = IDTROptimizer(
-            space, max_iterations=3, n_random_init=2, verbose=False, seed=42
-        )
+        optimizer2 = IDTROptimizer(space, max_iterations=3, n_random_init=2, verbose=False, seed=42)
         best2, score2 = optimizer2.optimize(objective)
 
         # Should get same results (within floating point precision)

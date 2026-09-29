@@ -14,7 +14,7 @@ class EvaluationRecord:
     iteration: int
     params: Dict[str, Any]
     score: float
-    
+
     def __repr__(self) -> str:
         return f"EvaluationRecord(iter={self.iteration}, score={self.score:.6f})"
 
@@ -25,7 +25,7 @@ class OptimizationHistory:
     def __init__(self, maximize: bool = True):
         """
         Initialize history tracker.
-        
+
         Parameters:
         -----------
         maximize : bool
@@ -128,9 +128,13 @@ class OptimizationHistory:
                 "std_score": None,
             }
 
+        best_record = self._best_record
+        if best_record is None:
+            raise RuntimeError("Optimization history has scores without a best record")
+
         return {
             "n_evaluations": len(scores),
-            "best_score": self._best_record.score,
+            "best_score": best_record.score,
             "mean_score": float(np.mean(scores)),
             "std_score": float(np.std(scores)),
             "min_score": float(np.min(scores)),

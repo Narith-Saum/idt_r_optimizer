@@ -127,7 +127,7 @@ class CategoricalVariable(Variable):
 class SearchSpace:
     """
     Manages the search space for hyperparameter optimization.
-    
+
     Supports:
     - Continuous (float): specify as (min, max)
     - Discrete (integer): specify as (min, max) with type hint
@@ -137,7 +137,7 @@ class SearchSpace:
     def __init__(self, space_dict: Dict[str, Union[Tuple, List]]):
         """
         Initialize search space.
-        
+
         Parameters:
         -----------
         space_dict : Dict[str, Union[Tuple, List]]
@@ -179,12 +179,12 @@ class SearchSpace:
     def denormalize(self, normalized_params: np.ndarray) -> Dict[str, Any]:
         """
         Convert normalized [0, 1] array to actual parameter dictionary.
-        
+
         Parameters:
         -----------
         normalized_params : np.ndarray
             Normalized parameters in [0, 1] range
-            
+
         Returns:
         --------
         Dict[str, Any]
@@ -198,12 +198,12 @@ class SearchSpace:
     def normalize(self, params: Dict[str, Any]) -> np.ndarray:
         """
         Convert actual parameters to normalized [0, 1] array.
-        
+
         Parameters:
         -----------
         params : Dict[str, Any]
             Dictionary of actual parameter values
-            
+
         Returns:
         --------
         np.ndarray
@@ -232,14 +232,14 @@ class SearchSpace:
     ) -> List[Dict[str, Any]]:
         """
         Sample uniformly from within specified parameter bounds (in normalized space).
-        
+
         Parameters:
         -----------
         bounds : Dict[str, Tuple[float, float]]
             Lower and upper bounds for each parameter in normalized [0, 1] space
         n_samples : int
             Number of samples to generate
-            
+
         Returns:
         --------
         List[Dict[str, Any]]

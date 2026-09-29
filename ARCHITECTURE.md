@@ -11,6 +11,7 @@ IDTROptimizer (Main Orchestrator)
 ├── Surrogate Model (DecisionTreeRegressor)
 ├── TreeNodeExtractor (Tree Analysis)
 ├── LeafSampler (Candidate Generation)
+├── Parallel Evaluator (Batch Execution)
 └── Utils (Helper Functions)
 ```
 
@@ -98,13 +99,14 @@ IDTROptimizer (Main Orchestrator)
 - `_extract_leaves()`: Get leaf nodes
 - `_select_top_leaves()`: Choose best regions
 - `_sample_from_leaves()`: Generate candidates
-- `_evaluate_candidates()`: Evaluate and track
+- `_evaluate_candidates()`: Evaluate candidate batches and track ordered results
 
 **Design Decision**:
 - Clear separation of concerns with private methods
 - Extensible architecture for future improvements
 - Verbose logging for transparency
 - Flexible API with sensible defaults
+- History is updated only by the main process after each evaluation batch
 
 ### 6. utils.py
 **Responsibility**: Utility functions and helpers
@@ -153,7 +155,7 @@ Remove Duplicates
     ↓
 Filter Already-Evaluated
     ↓
-Evaluate New Candidates
+Evaluate New Candidates (serial or parallel batch)
     ↓
 Update History
 ```
@@ -179,6 +181,7 @@ Update History
 - Seed parameter affects all randomness
 - Same seed = same results
 - Important for research and debugging
+- Objectives with their own random state must manage it independently
 
 ### 5. Clarity
 - Verbose logging by default
@@ -226,6 +229,7 @@ class ConstrainedSearchSpace(SearchSpace):
 - Tree training: O(n_evaluations × log(n_params))
 - Leaf extraction: O(tree_depth)
 - Sampling: O(n_top_leaves × n_samples_per_leaf)
+- Candidate evaluation: up to `n_jobs` independent evaluations at once
 - Overall: Dominated by tree training
 
 ### Space Complexity
@@ -250,6 +254,11 @@ class ConstrainedSearchSpace(SearchSpace):
 - Test with different parameter types
 - Verify reproducibility
 
+### Parallel Evaluation Tests
+- Verify threaded and process-backed candidate evaluation
+- Preserve proposal-order history updates
+- Isolate per-candidate objective failures
+
 ### Property Tests (Future)
 - Test invariants that should always hold
 - Use hypothesis for property-based testing
@@ -268,16 +277,16 @@ class ConstrainedSearchSpace(SearchSpace):
 
 ## Future Improvements
 
-1. **Parallel Evaluation**: Evaluate multiple candidates in parallel
-2. **Warm Start**: Initialize from previous optimizations
-3. **Custom Surrogates**: User-defined surrogate models
-4. **Constraints**: Add constraint support
-5. **Multi-Objective**: Pareto frontier optimization
-6. **Early Stopping**: Stop when improvement plateaus
+1. **Warm Start**: Initialize from previous optimizations
+2. **Custom Surrogates**: User-defined surrogate models
+3. **Constraints**: Add constraint support
+4. **Multi-Objective**: Pareto frontier optimization
+5. **Early Stopping**: Stop when improvement plateaus
 
 ## Dependencies
 
 ### Core
+- **joblib**: Parallel candidate evaluation
 - **numpy**: Numerical operations
 - **scikit-learn**: DecisionTreeRegressor surrogate
 
@@ -308,5 +317,5 @@ class ConstrainedSearchSpace(SearchSpace):
 
 ---
 
-**Last Updated**: 2024-01-01
+**Last Updated**: 2026-09-29
 **Maintainer**: IDT-R Development Team

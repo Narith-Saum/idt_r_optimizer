@@ -6,9 +6,8 @@ Core functionality:
 - Determine hyperparameter bounds (intervals) for each leaf
 """
 
-from typing import Dict, List, Tuple, Any
+from typing import Dict, List, Tuple
 from dataclasses import dataclass
-import numpy as np
 from sklearn.tree import DecisionTreeRegressor
 
 
@@ -38,22 +37,20 @@ class TreeNodeExtractor:
     ) -> List[LeafNode]:
         """
         Extract all leaf nodes from a trained decision tree.
-        
+
         Parameters:
         -----------
         tree : DecisionTreeRegressor
             Trained sklearn DecisionTreeRegressor
         param_names : List[str]
             Names of hyperparameters (must match tree feature order)
-            
+
         Returns:
         --------
         List[LeafNode]
             List of leaf nodes with their bounds and predictions
         """
         leaves = []
-        n_params = len(param_names)
-
         # Initialize bounds: each param gets [0, 1]
         initial_bounds = {name: [0.0, 1.0] for name in param_names}
 
@@ -68,10 +65,7 @@ class TreeNodeExtractor:
                 n_samples = tree_struct.n_node_samples[node_id]
 
                 # Convert bounds to tuples
-                bounds_tuple = {
-                    name: (bounds[name][0], bounds[name][1])
-                    for name in param_names
-                }
+                bounds_tuple = {name: (bounds[name][0], bounds[name][1]) for name in param_names}
 
                 leaf = LeafNode(
                     leaf_id=node_id,
@@ -109,7 +103,7 @@ class TreeNodeExtractor:
     ) -> List[Dict[str, Tuple[float, float]]]:
         """
         Get interval bounds for each leaf in the tree (normalized space).
-        
+
         Returns:
         --------
         List[Dict[str, Tuple[float, float]]]
@@ -125,7 +119,7 @@ class TreeNodeExtractor:
     ) -> List[LeafNode]:
         """
         Rank leaves by their predicted performance.
-        
+
         Parameters:
         -----------
         leaves : List[LeafNode]
@@ -133,7 +127,7 @@ class TreeNodeExtractor:
         maximize : bool
             If True, sort descending (best first)
             If False, sort ascending (best first)
-            
+
         Returns:
         --------
         List[LeafNode]
@@ -150,7 +144,7 @@ class TreeNodeExtractor:
     ) -> List[LeafNode]:
         """
         Select top N leaves by predicted performance.
-        
+
         Parameters:
         -----------
         leaves : List[LeafNode]
@@ -160,7 +154,7 @@ class TreeNodeExtractor:
         maximize : bool
             If True, select highest predictions
             If False, select lowest predictions
-            
+
         Returns:
         --------
         List[LeafNode]

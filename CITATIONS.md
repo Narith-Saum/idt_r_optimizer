@@ -7,23 +7,23 @@ If you use the IDT-R Optimizer package in your research or applications, please 
 ### BibTeX
 
 ```bibtex
-@software{idt_r_2024,
+@software{idt_r_2026,
   title={IDT-R Optimizer: Iterative Decision Tree - Random Hyperparameter Optimization},
   author={{IDT-R Development Team}},
-  year={2024},
-  url={https://github.com/yourname/idt_r_optimizer},
-  version={0.1.0},
+  year={2026},
+  url={https://github.com/Narith-Saum/idt_r_optimizer},
+  version={0.2.0},
   howpublished={Python Package Index (PyPI)}
 }
 ```
 
 ### APA Style
 
-IDT-R Development Team. (2024). *IDT-R Optimizer: Iterative Decision Tree - Random Hyperparameter Optimization* (Version 0.1.0) [Software]. Retrieved from https://github.com/yourname/idt_r_optimizer
+IDT-R Development Team. (2026). *IDT-R Optimizer: Iterative Decision Tree - Random Hyperparameter Optimization* (Version 0.2.0) [Software]. Retrieved from https://github.com/Narith-Saum/idt_r_optimizer
 
 ### Chicago Style
 
-IDT-R Development Team. 2024. "IDT-R Optimizer: Iterative Decision Tree - Random Hyperparameter Optimization." Version 0.1.0. Accessed at https://github.com/yourname/idt_r_optimizer.
+IDT-R Development Team. 2026. "IDT-R Optimizer: Iterative Decision Tree - Random Hyperparameter Optimization." Version 0.2.0. Accessed at https://github.com/Narith-Saum/idt_r_optimizer.
 
 ---
 
@@ -99,6 +99,10 @@ This paper introduces the Iterative Decision Tree algorithm that forms the theor
   - [https://scikit-learn.org/](https://scikit-learn.org/)
   - License: BSD
 
+- **joblib** (≥1.2.0): Parallel candidate evaluation
+  - [https://joblib.readthedocs.io/](https://joblib.readthedocs.io/)
+  - License: BSD
+
 ### Optional Dependencies
 
 - **TensorFlow/Keras** (for deep learning examples): Neural network framework
@@ -135,7 +139,7 @@ Use the expanded citation with DOI reference:
 
 Include version and access date:
 
-> IDT-R Optimizer [0.1.0] was used for hyperparameter tuning. Source code: https://github.com/yourname/idt_r_optimizer (Accessed: YYYY-MM-DD).
+> IDT-R Optimizer [0.2.0] was used for hyperparameter tuning. Source code: https://github.com/Narith-Saum/idt_r_optimizer (Accessed: YYYY-MM-DD).
 
 ### For Repositories
 
@@ -158,4 +162,4 @@ For questions about citations or references, please:
 
 ---
 
-*Last Updated: March 28, 2024*
+*Last Updated: September 29, 2026*

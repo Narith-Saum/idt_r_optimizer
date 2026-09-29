@@ -4,8 +4,9 @@ Main IDT-R Optimizer class.
 Implements the Iterative Decision Tree - Random (IDT-R) hyperparameter optimization algorithm.
 """
 
-from typing import Callable, Dict, List, Any, Optional, Tuple
+from typing import Any, Callable, Dict, List, Literal, Optional, Tuple
 import numpy as np
+from joblib import Parallel, delayed
 from sklearn.tree import DecisionTreeRegressor
 
 from .search_space import SearchSpace
@@ -17,6 +18,19 @@ from .utils import (
     filter_new_params,
     format_params_for_display,
 )
+
+
+ParallelBackend = Literal["threading", "loky"]
+
+
+def _evaluate_objective(
+    objective_function: Callable[[Dict[str, Any]], float],
+    params: Dict[str, Any],
+) -> Tuple[Dict[str, Any], Optional[float], Optional[str]]:
+    try:
+        return params, objective_function(params), None
+    except Exception as error:
+        return params, None, str(error)
 
 
 class IDTROptimizer:
@@ -62,6 +76,13 @@ class IDTROptimizer:
 
     seed : int
         Random seed for reproducibility
+
+    n_jobs : int
+        Number of concurrent candidate evaluations. Use 1 for serial execution
+        or -1 to use all available workers.
+
+    parallel_backend : {"threading", "loky"}
+        Execution backend used when n_jobs is not 1.
     """
 
     def __init__(
@@ -75,7 +96,14 @@ class IDTROptimizer:
         verbose: bool = True,
         maximize: bool = True,
         seed: Optional[int] = None,
+        n_jobs: int = 1,
+        parallel_backend: ParallelBackend = "threading",
     ):
+        if isinstance(n_jobs, bool) or not isinstance(n_jobs, int) or n_jobs == 0 or n_jobs < -1:
+            raise ValueError("n_jobs must be a positive integer or -1")
+        if parallel_backend not in ("threading", "loky"):
+            raise ValueError("parallel_backend must be 'threading' or 'loky'")
+
         self.search_space = SearchSpace(search_space)
         self.max_iterations = max_iterations
         self.n_random_init = n_random_init
@@ -85,6 +113,8 @@ class IDTROptimizer:
         self.verbose = verbose
         self.maximize = maximize
         self.seed = seed
+        self.n_jobs = n_jobs
+        self.parallel_backend = parallel_backend
 
         if seed is not None:
             np.random.seed(seed)
@@ -93,7 +123,9 @@ class IDTROptimizer:
         self.tree: Optional[DecisionTreeRegressor] = None
         self._iteration = 0
 
-    def optimize(self, objective_function: Callable[[Dict[str, Any]], float]) -> Tuple[Dict[str, Any], float]:
+    def optimize(
+        self, objective_function: Callable[[Dict[str, Any]], float]
+    ) -> Tuple[Dict[str, Any], float]:
         """
         Run IDT-R optimization.
 
@@ -116,6 +148,7 @@ class IDTROptimizer:
             print(f"Max Iterations: {self.max_iterations}")
             print(f"Top Leaves: {self.n_top_leaves}")
             print(f"Samples per Leaf: {self.n_samples_per_leaf}")
+            print(f"Parallel Jobs: {self.n_jobs} ({self.parallel_backend})")
             print(f"{'='*70}\n")
 
         # Phase 1: Initial random exploration
@@ -175,6 +208,11 @@ class IDTROptimizer:
         best_params = self.history.get_best_params()
         best_score = self.history.get_best_score()
 
+        if best_params is None or best_score is None:
+            raise RuntimeError(
+                "Optimization failed because no candidate was evaluated successfully"
+            )
+
         if self.verbose:
             print(f"\n{'='*70}")
             print("Optimization Complete")
@@ -200,9 +238,7 @@ class IDTROptimizer:
         scores = self.history.get_all_scores()
 
         # Convert params to normalized array
-        X = np.array([
-            self.search_space.normalize(p) for p in params
-        ], dtype=np.float32)
+        X = np.array([self.search_space.normalize(p) for p in params], dtype=np.float32)
 
         y = np.array(scores, dtype=np.float32)
 
@@ -244,23 +280,30 @@ class IDTROptimizer:
 
     def _evaluate_candidates(
         self,
-        objective_function: Callable,
+        objective_function: Callable[[Dict[str, Any]], float],
         candidates: List[Dict[str, Any]],
     ) -> None:
         """Evaluate a list of candidates and update history."""
-        for params in candidates:
-            try:
-                score = objective_function(params)
-                self.history.add_record(self._iteration, params, score)
+        if self.n_jobs == 1 or len(candidates) == 1:
+            results = [_evaluate_objective(objective_function, params) for params in candidates]
+        else:
+            results = Parallel(n_jobs=self.n_jobs, backend=self.parallel_backend)(
+                delayed(_evaluate_objective)(objective_function, params) for params in candidates
+            )
 
+        for params, score, error_message in results:
+            if error_message is not None or score is None:
                 if self.verbose:
-                    score_str = f"{score:.6f}"
-                    params_str = format_params_for_display(params)
-                    print(f"  Evaluated: score={score_str}, params={params_str}")
+                    message = error_message or "objective function returned no score"
+                    print(f"  Error evaluating {params}: {message}")
+                continue
 
-            except Exception as e:
-                if self.verbose:
-                    print(f"  Error evaluating {params}: {e}")
+            self.history.add_record(self._iteration, params, score)
+
+            if self.verbose:
+                score_str = f"{score:.6f}"
+                params_str = format_params_for_display(params)
+                print(f"  Evaluated: score={score_str}, params={params_str}")
 
     def get_history(self) -> OptimizationHistory:
         """Return the optimization history."""

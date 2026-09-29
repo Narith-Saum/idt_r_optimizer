@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-09-29
+
+### Added
+- **Parallel Candidate Evaluation**: Added `n_jobs` and `parallel_backend` to `IDTROptimizer`
+  - Serial execution remains the default with `n_jobs=1`
+  - `threading` supports shared-memory objectives
+  - `loky` supports serializable CPU-bound objectives
+  - Candidate history and verbose output retain proposal order
+- **Parallel Regression Tests**: Added threaded, process-backed, ordering, error-isolation, and reproducibility coverage
+- **Release Automation**: Added CI and PyPI publishing workflows
+
+### Fixed
+- Synchronized runtime and package versions at `0.2.0`
+- Removed unresolved merge-conflict markers from `.gitignore`
+- Corrected stale documentation, examples, citations, and repository URLs
+
 ## [0.1.5] - 2026-03-31
 
 ### Fixed
