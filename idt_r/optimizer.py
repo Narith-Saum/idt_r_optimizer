@@ -19,7 +19,6 @@ from .utils import (
     format_params_for_display,
 )
 
-
 ParallelBackend = Literal["threading", "loky"]
 
 
